@@ -1,0 +1,123 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="project">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+    <meta name="author" content="vinayak sharma">
+
+    <title>{{title}}</title>
+
+
+    <!-- bootstrap file -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- bootstrap file-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <!-- main css -->
+    <link rel="stylesheet" type="text/css" href="{% static "index.css" %}" />
+
+    {% if messages %}
+        {% for message in messages %}
+
+            <script>
+                alert("{{ message }}");
+            </script>
+
+        {% endfor %}
+    {% endif %}
+</head>
+
+<body class="container-fluid">
+
+
+<header class="row">
+
+    <!-- navbar-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header primary">
+                <button class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" class="styleheader" href="{% url "index" %}" style="color:white">Neo Bank</a>
+            </div>
+            <div class="collapse navbar-collapse" id="mainNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url "index" %}" style="color:white">Home</a></li>
+
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url "logout" %}" style="color:white"><span class="glyphicon glyphicon-log-out"></span> &nbsp; Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url "register" %}" style="color:white"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign up</a></li>
+                        <li><a href="{% url "login" %}" style="color:white"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log in</a></li>
+                    {% endif %}
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<br/>
+<br>
+<br>
+<div class="row">
+    {% block start %}
+        {% if user.is_authenticated %}
+            <center><h1>Dashboard</h1></center>
+            <br/>
+            <br/>
+            <div class="container" style="float: none;margin: 0 auto;">
+                <h3>Wallet Details</h3>
+                <p>Wallet Id:  {{ wallet_id }}</p>
+                <p>Balance:  {{ balance }} INR</p>
+                <p>Card Details: <a href="{{ card_url }}" target="_blank">View</a></p>
+            </div>
+            <br/>
+            <br/>
+            <div class="container" style="float: none;margin: 0 auto;">
+                <h3>Add to wallet</h3>
+                <input type="text" placeholder="amount" class="form-control-sm" id="add_amount" style="padding: 5px
+">
+                <br/>
+                <div>
+                    <button style="background: black; font-size: 2rem; color:white;margin-top:10px" class="btn btn-outline-info btn-sm" id="add_button">Add</button>
+                <div/>
+            </div>
+        {% else %}
+            <div class="container" style="float: none;margin: 0 auto;">
+                <br/>
+                <br/>
+                <h4>Login / Register to access your Neo Bank account</h4>
+                <br/>
+                <br/>
+                <img src="/static/neo_bank.jpeg" />
+            </div>
+        {% endif %}
+    {% endblock %}
+</div>
+</body>
+<script>
+    $("#add_button").on("click", function() {
+        var amount = $('#add_amount').val();
+        console.log(amount);
+        window.open('/add_to_wallet/?amount=' + amount, '_blank')
+    });
+</script>
+
+</html>
